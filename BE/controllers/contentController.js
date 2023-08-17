@@ -35,20 +35,22 @@ class ContentController {
   }
 
   static async create(req, res, next) {
-    const {
-      user_id,
-      title,
-      text,
-      publication,
-      published_at,
-      image,
-      category_id,
-    } = req.body;
+    const userId = req.user.id;
+
+    const { title, text, publication, published_at, image, category_id } =
+      req.body;
 
     try {
       const content = await sequelize.transaction(async (t) => {
         const createdContent = await Content.create(
-          { user_id, title, text, publication, published_at, image },
+          {
+            user_id: userId,
+            title,
+            text,
+            publication,
+            published_at,
+            image,
+          },
           { transaction: t }
         );
         await ContentCategory.create(
